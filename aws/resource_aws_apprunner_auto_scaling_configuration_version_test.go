@@ -49,6 +49,12 @@ func testSweepAppRunnerAutoScalingConfigurationVersions(region string) error {
 				continue
 			}
 
+			// Skip DefaultConfigurations as deletion not supported by the AppRunner service
+			// Reference: https://github.com/hashicorp/terraform-provider-aws/issues/19840
+			if aws.StringValue(summaryConfig.AutoScalingConfigurationName) == "DefaultConfiguration" {
+				continue
+			}
+
 			arn := aws.StringValue(summaryConfig.AutoScalingConfigurationArn)
 
 			log.Printf("[INFO] Deleting App Runner AutoScaling Configuration Version (%s)", arn)
